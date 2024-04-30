@@ -8,38 +8,51 @@
         </style>
         <!-- domain locking in effect, this script will only run from 
             https://dduwab.github.com/ and http://127.0.0.1:3000/ for local testing.
+            Do not try to break the domain lock. Talk to me if you different access.
         -->
         <script src="https://getscript.canvaslanguage.workers.dev/" referrerpolicy="origin-when-cross-origin">
         </script>
         <script>
             window.addEventListener('DOMContentLoaded', (event) => {
+                const runIt = () => Animate.Run(document.getElementById("source").value, document.getElementById("gameCanvas"), "Start", 'images/');
                 Animate.SetErrorDiv("log");
-                Animate.Run(document.getElementById("source").value, document.getElementById("gameCanvas"), "Start");
+                document.getElementById("run").addEventListener( "click", () => runIt() );
+                runIt();
             });
         </script>
 
     </head>
     <body>
         <p>
-            Hello. This is probably good enough.
+            Hello. This is probably good enough.<br><br>
+            <a href="https://github.com/dduwab/sclDocs/tree/main/docs" target="scldocs">SCL docs</a>
         </p>
         <canvas width="300" height="300" id="gameCanvas"></canvas>
-<br/>
+        <br/>
 <textarea id="source" wrap=off rows="8" cols="50">
 create routine as Start
-	launch TS
+    launch Heart
+    launch TS
 end
 create textsprite as TS
-	where text="Hello World" x=150 y=150 align="center"
-	having alt=rot1
+    where text="Hello World" x=150 y=150 align="center"
+        font="italic bold 48px sans-serif"
+    having alt=rot1
 end
 create rotation as rot1
-	where speed=-100
+    where speed=-100
 end
-</textarea>
+create sprite from heart.png as Heart
+  where center=auto x=150 y=150
+  having alt=(sub
+    create scale as PumpUp
+      where rate=1 until=1.3 completion=(sub
+    create scale
+        where rate=-1 until=1 completion=PumpUp
+    end) end)
+end
+</textarea><br>
+        <button id="run">Restart</button>
         <div id="log"></div>
-        <p>
-            <a href="..">Back</a>
-        </p>
     </body>
 </html>
